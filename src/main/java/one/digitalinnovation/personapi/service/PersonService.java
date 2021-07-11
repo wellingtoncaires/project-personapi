@@ -45,11 +45,17 @@ public class PersonService {
     }
 
     public PersonDTO findById(Long id) throws PersonNotFountException {
-        Person person = personRepository.findById(id)
-                .orElseThrow(() -> new PersonNotFountException(id));
-
+        Person person = verifyIfExists(id);
         return personMapper.toDTO(person);
     }
 
+    public Person verifyIfExists(Long id) throws PersonNotFountException {
+        return personRepository.findById(id)
+                .orElseThrow(() -> new PersonNotFountException(id));
+    }
 
+    public void delete(Long id) throws PersonNotFountException {
+        verifyIfExists(id);
+        personRepository.deleteById(id);
+    }
 }
